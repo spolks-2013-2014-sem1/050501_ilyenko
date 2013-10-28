@@ -1,15 +1,15 @@
 #include "SocketServer.h"
-#include "SignalHandlerObserver.h"
+#include "SignalHandlerNotifier.h"
 
 SocketServer::SocketServer(const char* addressString, const char* portString, const char* protocolName)
 {
-    SignalHandlerObserver::Subscribe((IHandlerSubscribable*)this);
+    SignalHandlerNotifier::Subscribe((ISignalObserver*)this);
     CreateServer(addressString, portString, protocolName);
 }
 
 SocketServer::SocketServer(const char* addressString, const char* portString, const char* protocolName, int outputDescriptor)
 {
-    SignalHandlerObserver::Subscribe(this);
+    SignalHandlerNotifier::Subscribe(this);
     CreateServer(addressString, portString, protocolName);
     this->outputDescriptor = outputDescriptor;
 }

@@ -1,5 +1,5 @@
 #include "SocketServer.h"
-#include "SignalHandlerObserver.h"
+#include "SignalHandlerNotifier.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -7,7 +7,7 @@
 
 int main(int argc, char** argv)
 {
-    SignalHandlerObserver::SetupSignalHandlers();
+    SignalHandlerNotifier::SetupSignalHandlers();
     SocketServer server("127.0.0.1", "1441", "tcp");
     return EXIT_SUCCESS;
 }

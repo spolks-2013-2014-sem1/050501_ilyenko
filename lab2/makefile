@@ -1,5 +1,5 @@
 OBJS = ./main.cpp ./SocketServer.h ./SocketServer.cpp ./headers.h \
-	./SignalHandlerObserver.h ./SignalHandlerObserver.cpp ./IHandlerSubscribable.h
+	./SignalHandlerNotifier.h ./SignalHandlerNotifier.cpp ./ISignalObserver.h
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG)
