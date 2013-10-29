@@ -11,4 +11,4 @@ Use
 ---
 Server works on local ip address *127.0.0.1* and uses TCP port *1441*.
 Use `telnet localhost 1441` or `nc 127.0.0.1 1441` to connect to the server.
-Server will end receiving when get the EOT character `Ctrl-D` *(U+0004)* from the client.
+Server will end receiving when get the EOT *(U+0004)* character (`Ctrl-D` on Linux) from the client.
