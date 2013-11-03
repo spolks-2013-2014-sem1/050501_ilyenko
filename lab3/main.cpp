@@ -22,12 +22,12 @@ int main(int argc, char** argv)
     		ClientDemo();
     	}
     }
-    return EXIT_SUCCESS;
+    return EXIT_SUCCESS;	
 }
 
 void ServerDemo()
 {
-	SocketServer server("127.0.0.1", "1441", "tcp");
+	SocketServer server("127.0.0.1", "1441", "tcp", stdout);
 }
 
 void ClientDemo()
@@ -48,4 +48,5 @@ void ClientDemo()
 	int dataSize = strlen(data);
 
 	client.SendTo(&serverConfig, data, dataSize);
+
 }

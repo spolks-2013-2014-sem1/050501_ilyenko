@@ -10,8 +10,8 @@ SocketServer::SocketServer(const char* addressString, const char* portString, co
 SocketServer::SocketServer(const char* addressString, const char* portString, const char* protocolName, int outputDescriptor)
 {
     SignalHandlerNotifier::Subscribe(this);
-    CreateServer(addressString, portString, protocolName);
     this->outputDescriptor = outputDescriptor;
+    CreateServer(addressString, portString, protocolName);
 }
 
 SocketServer::~SocketServer()

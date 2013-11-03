@@ -7,12 +7,14 @@ SocketClient::SocketClient(ClientParameters* client)
 
 SocketClient::~SocketClient()
 {
+    Close(this->socketDescriptor);
 }
 
 void SocketClient::CreateClient(ClientParameters* params)
 {
     this->socketDescriptor = CreateSocket(params->ipAddress, params->port,
         params->protocol);
+
 }
 
 int SocketClient::SendData(const char* buffer, int bufferSize)
@@ -37,20 +39,27 @@ int SocketClient::Connect(ClientParameters* server)
 int SocketClient::SendTo(ClientParameters* server, const char* data,
     int dataSize)
 {
-    Connect(server);
+    if (Connect(server) == -1) {
+        // ERROR CODES ?
+        return 1;
+    }
 
-    const int bufferSize = 100;
+    const int bufferSize = 10;
     char* buffer = new char[bufferSize];
     int dataSent = 0;
-
+    
     do {
         memset(buffer, 0, bufferSize);
         int lengthToSend = GetLengthToSent(bufferSize, dataSize, dataSent);
-        memcpy(buffer, (data + dataSent), lengthToSend);
+        memcpy(buffer, (char*)(data + dataSent), lengthToSend);
+    
         dataSent += SendData(buffer, lengthToSend);
     } while (dataSent < dataSize);
 
-    delete [] buffer; 
+    delete [] buffer;
+    
+    ShutdownSocket(this->socketDescriptor);
+
     return 0;
 }
 

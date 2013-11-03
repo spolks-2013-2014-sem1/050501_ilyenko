@@ -2,6 +2,8 @@
 #define __SocketServer__
 
 #include "headers.h"
+
+#include <stdio.h>
 #include "SocketBase.h"
 
 class SocketServer: public SocketBase
@@ -9,10 +11,11 @@ class SocketServer: public SocketBase
 private:
 protected:
     
-    int outputDescriptor;
+    FILE* outputDescriptor;
 
 
-    int CreateServer(const char* addressString, const char* portString, const char* protocolName);
+    int CreateServer(const char* addressString, 
+        const char* portString, const char* protocolName);
 
     int StartServerCycle(int serverSocket);
     
@@ -26,9 +29,11 @@ protected:
 
 public:
 
-    SocketServer(const char* addressString, const char* portString, const char* protocolName);
+    SocketServer(const char* addressString, const char* portString, 
+        const char* protocolName);
 
-    SocketServer(const char* addressString, const char* portString, const char* protocolName, int outputDescriptor);
+    SocketServer(const char* addressString, const char* portString, 
+        const char* protocolName, FILE* outputDescriptor);
 
     ~SocketServer();
 

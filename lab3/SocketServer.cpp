@@ -1,15 +1,17 @@
 #include "SocketServer.h"
 
-SocketServer::SocketServer(const char* addressString, const char* portString, const char* protocolName)
+SocketServer::SocketServer(const char* addressString, const char* portString, 
+    const char* protocolName)
 {
+    this->outputDescriptor = stdout;
     CreateServer(addressString, portString, protocolName);
 }
 
-SocketServer::SocketServer(const char* addressString, const char* portString, const char* protocolName, int outputDescriptor)
+SocketServer::SocketServer(const char* addressString, const char* portString, 
+    const char* protocolName, FILE* outputDescriptor)
 {
-    SignalHandlerNotifier::Subscribe(this);
-    CreateServer(addressString, portString, protocolName);
     this->outputDescriptor = outputDescriptor;
+    CreateServer(addressString, portString, protocolName);
 }
 
 SocketServer::~SocketServer()
@@ -43,14 +45,18 @@ int SocketServer::StartServerCycle(int serverSocket)
         if (clientSocket == -1) {
             continue;
         }
-
+        ////puts("Client connected.");
         ReadData(clientSocket);
+        
         int shutdownResult = ShutdownSocket(clientSocket);
         if (shutdownResult == -1) {
             Close(serverSocket);
+            Close(clientSocket);
             exit(EXIT_FAILURE);
         }
+        
         Close(clientSocket);
+        ////puts("Client connection has been closed.");
     }
     return 0;
 }
@@ -63,9 +69,15 @@ int SocketServer::ReadData(int socket)
     
     do {
         memset(buffer, 0, bufferSize);
-        recv(socket, buffer, bufferSize, 0);
-        write(this->outputDescriptor, buffer, GetDataLength(buffer, bufferSize));
-    // Break receiveing when end-of-transmission character is found (Ctrl-D on UNIX).
+        int bytesRead = recv(socket, buffer, bufferSize, 0);
+        
+        if (bytesRead && bytesRead != -1) {
+            fwrite(buffer, 1, GetDataLength(buffer, bufferSize), this->outputDescriptor);
+            fflush(this->outputDescriptor);            
+        } else {
+            break;
+        }
+    // Break receiving when end-of-transmission character is found (Ctrl-D on UNIX).
     } while (strchr(buffer, EOT) == 0);
 
     return 0;

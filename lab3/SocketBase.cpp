@@ -103,3 +103,18 @@ void SocketBase::SignalCallback(int signum)
     CloseAllSockets();
     printf("Socket was halted after receiveing the signal %0d.\n", signum);
 }
+
+
+/*int CheckSocketActive(int socket)
+{
+	fd_set readDesctiptors;
+	timeval timeToWait;
+	
+	FD_ZERO(&readDesctiptors);
+	FD_SET(socket, &readDesctiptors);
+
+	timeToWait.tv_sec = 1;
+	timeToWait.tv_usec = 0;
+
+	int result = select();
+}*/
