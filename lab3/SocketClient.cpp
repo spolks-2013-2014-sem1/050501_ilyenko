@@ -14,10 +14,9 @@ void SocketClient::CreateClient(ClientParameters* params)
 {
     this->socketDescriptor = CreateSocket(params->ipAddress, params->port,
         params->protocol);
-
 }
 
-int SocketClient::SendData(const char* buffer, int bufferSize)
+int SocketClient::SendBuffer(const char* buffer, int bufferSize)
 {
     int bytesSent = send(this->socketDescriptor, buffer, bufferSize, 0);
     return bytesSent;
@@ -44,26 +43,33 @@ int SocketClient::SendTo(ClientParameters* server, const char* data,
         return 1;
     }
 
-    const int bufferSize = 10;
-    char* buffer = new char[bufferSize];
-    int dataSent = 0;
-    
-    do {
-        memset(buffer, 0, bufferSize);
-        int lengthToSend = GetLengthToSent(bufferSize, dataSize, dataSent);
-        memcpy(buffer, (char*)(data + dataSent), lengthToSend);
-    
-        dataSent += SendData(buffer, lengthToSend);
-    } while (dataSent < dataSize);
-
-    delete [] buffer;
+    SendData(data, dataSize);
     
     ShutdownSocket(this->socketDescriptor);
 
     return 0;
 }
 
-int SocketClient::GetLengthToSent(int bufferSize, int dataSize, int bytesSent)
+int SocketClient::SendData(const char* data, int dataSize)
+{
+    const int bufferSize = 10;
+    char* buffer = new char[bufferSize];
+    int dataSent = 0;
+    
+    do {
+        memset(buffer, 0, bufferSize);
+        int lengthToSend = GetLengthToSend(bufferSize, dataSize, dataSent);
+        memcpy(buffer, (char*)(data + dataSent), lengthToSend);
+    
+        dataSent += SendBuffer(buffer, lengthToSend);
+    } while (dataSent < dataSize);
+
+    delete [] buffer;
+
+    return 0;
+}
+
+int SocketClient::GetLengthToSend(int bufferSize, int dataSize, int bytesSent)
 {
     if (bytesSent + bufferSize > dataSize) {
         return dataSize - bytesSent;

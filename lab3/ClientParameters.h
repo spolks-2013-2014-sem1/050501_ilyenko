@@ -5,11 +5,11 @@ class ClientParameters
 {
 public:
 
-	const char* ipAddress;
-	
-	const char* port;
-	
-	const char* protocol;
+    const char* ipAddress;
+    
+    const char* port;
+    
+    const char* protocol;
 };
 
 #endif //__ClientParameters__

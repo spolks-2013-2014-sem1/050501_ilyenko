@@ -16,37 +16,37 @@ int main(int argc, char** argv)
     SignalHandlerNotifier::SetupSignalHandlers();
 
     if (argc == 2) {
-    	if (strcmp(argv[1], "-server") == 0){
-    		ServerDemo();
-    	} else {
-    		ClientDemo();
-    	}
+        if (strcmp(argv[1], "-server") == 0) {
+            ServerDemo();
+        } else {
+            ClientDemo();
+        }
     }
-    return EXIT_SUCCESS;	
+    return EXIT_SUCCESS;    
 }
 
 void ServerDemo()
 {
-	SocketServer server("127.0.0.1", "1441", "tcp", stdout);
+    SocketServer server("127.0.0.1", "1441", "tcp", stdout);
 }
 
 void ClientDemo()
 {
-	ClientParameters clientConfig;
-	clientConfig.ipAddress = "127.0.0.1";
-	clientConfig.port = "1442";
-	clientConfig.protocol = "tcp";
+    ClientParameters clientConfig;
+    clientConfig.ipAddress = "127.0.0.1";
+    clientConfig.port = "1442";
+    clientConfig.protocol = "tcp";
 
-	SocketClient client(&clientConfig);
+    SocketClient client(&clientConfig);
 
-	ClientParameters serverConfig;
-	serverConfig.ipAddress = "127.0.0.1";
-	serverConfig.port = "1441";
-	serverConfig.protocol = "tcp";
+    ClientParameters serverConfig;
+    serverConfig.ipAddress = "127.0.0.1";
+    serverConfig.port = "1441";
+    serverConfig.protocol = "tcp";
 
-	const char* data = "some data to send";
-	int dataSize = strlen(data);
+    const char* data = "some data to send";
+    int dataSize = strlen(data);
 
-	client.SendTo(&serverConfig, data, dataSize);
+    client.SendTo(&serverConfig, data, dataSize);
 
 }

@@ -2,12 +2,12 @@
 
 SocketBase::SocketBase()
 {
-	SignalHandlerNotifier::Subscribe((ISignalObserver*)this);
+    SignalHandlerNotifier::Subscribe((ISignalObserver*)this);
 }
 
 SocketBase::~SocketBase()
 {
-	CloseAllSockets();
+    CloseAllSockets();
 }
 
 int SocketBase::CreateSocket(const char* addressString, const char* portString, const char* protocolName)
@@ -27,7 +27,7 @@ int SocketBase::CreateSocket(const char* addressString, const char* portString, 
 
 
 sockaddr_in SocketBase::CreateSocketAddress(const char* portString, 
-	const char* address)
+    const char* address)
 {
     struct sockaddr_in socketAddress;
     memset(&socketAddress, 0, sizeof(socketAddress));
@@ -101,20 +101,5 @@ void SocketBase::CloseAllSockets()
 void SocketBase::SignalCallback(int signum)
 {
     CloseAllSockets();
-    printf("Socket was halted after receiveing the signal %0d.\n", signum);
+    printf("Socket was halted after receiving the signal %0d.\n", signum);
 }
-
-
-/*int CheckSocketActive(int socket)
-{
-	fd_set readDesctiptors;
-	timeval timeToWait;
-	
-	FD_ZERO(&readDesctiptors);
-	FD_SET(socket, &readDesctiptors);
-
-	timeToWait.tv_sec = 1;
-	timeToWait.tv_usec = 0;
-
-	int result = select();
-}*/

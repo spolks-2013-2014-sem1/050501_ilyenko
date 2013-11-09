@@ -7,14 +7,15 @@
 class SocketClient: public SocketBase
 {
 private:
-
-    int GetLengthToSent(int bufferSize, int dataSize, int bytesSent);
-
 protected:
+
+    int GetLengthToSend(int bufferSize, int dataSize, int bytesSent);
 
     void CreateClient(ClientParameters* client);
 
-    int SendData(const char* buffer, int bufferSize);
+    int SendData(const char* data, int dataSize);
+
+    int SendBuffer(const char* buffer, int bufferSize);
 
     int Connect(ClientParameters* server);
 
