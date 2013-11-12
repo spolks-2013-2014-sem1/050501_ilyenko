@@ -1,21 +1,26 @@
 #ifndef __SocketFileSender__
 #define __SocketFileSender__
 
-#include "SocketClient.h"
+#include "../spolks_lib/SocketClient.h"
+#include "../spolks_lib/StringToIntConverter.h"
 #include "FileReader.h"
-#include "StringToIntConverter.h"
+
 
 class SocketFileSender: public SocketClient
 {
 private:
 
-	const char* GetFileName(const char* fullPath);
+	std::string GetFileName(const char* fullPath);
+
+	int SendString(std::string& str, int bufferSize);
 
 protected:
 
 	int SendFileData(const char* filePath);
 
 	int SendFileSize(int fileSize);
+
+	int SendFileName(std::string& fileName);
 
 public:
 

@@ -11,51 +11,59 @@ SocketFileSender::~SocketFileSender()
 {
 }
 
-bool SocketFileSender::SendFile(ClientParameters* params, 
-    const char* filePath)
+bool SocketFileSender::SendFile(ClientParameters* params, const char* filePath)
 {
     if (Connect(params) == -1) {
         return false;
     }
 
-    // refactor ?
-    const char* fileName = GetFileName(filePath);
-    SendBuffer(fileName, strlen(fileName));
-
+    std::string fileName = GetFileName(filePath);
+    if (fileName == "") {
+        puts("Cannot extract file name. Exiting...");
+        return -1;
+    }
+    const int bufferSize = 256;
+    SendString(fileName, bufferSize);
 
     SendFileData(filePath);
-
-    return false;    
+    
+    return 1;    
 }
 
-const char* SocketFileSender::GetFileName(const char* fullPath)
+std::string SocketFileSender::GetFileName(const char* fullPath)
 {
     std::string fullPathStr(fullPath);
-    // OS-specific
-    const int idx = fullPathStr.find_last_of("/");
+    // OS-specific code!
+    unsigned int idx = fullPathStr.find_last_of("/");
     if (std::string::npos != idx) {
         std::string filename(fullPathStr.substr(idx + 1));
-        return filename.c_str();
+        return filename;
     }
-    return NULL;
+    return "";
 }
 
 int SocketFileSender::SendFileData(const char* filePath)
 {
-    FileReader reader(filePath);
+    FileReader* reader = new FileReader(filePath);
+    int fileSize = reader->GetFileSize();
 
-    SendFileSize(reader.GetFileSize());
+    SendFileSize(fileSize);
 
-    int bufferSize = 100;
+    int bufferSize = 1024;
     char* buffer = new char[bufferSize];
-    while (reader.CanRead()) {
+    while (reader->CanRead()) {
         
-        reader.GetData(buffer, bufferSize);
+        reader->GetData(buffer, bufferSize);
+        
         SendBuffer(buffer, bufferSize);
-        bufferSize = 100;
-    
+        
+        bufferSize = 1024;
+        memset(buffer, 0, bufferSize);
     }
+
+    puts("Data sending ended");
     delete [] buffer;
+    delete reader;
 
     return 0;
 }
@@ -64,7 +72,22 @@ int SocketFileSender::SendFileSize(int fileSize)
 {
     StringToIntConverter converter;
     std::string sizeString = converter.ToString(fileSize);
-    SendBuffer(sizeString.c_str(), sizeString.length());
+    
+    const int bufferSize = 256;
+    SendString(sizeString, bufferSize);
 
     return 0;
+}
+
+int SocketFileSender::SendString(std::string& str, int size)
+{
+    
+    char* stringBufer = new char[size];
+    str.copy(stringBufer, str.length(), 0);
+
+    SendBuffer(stringBufer, size);
+
+    delete[] stringBufer;
+
+    return 1;
 }

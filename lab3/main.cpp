@@ -1,52 +1,69 @@
-#include "SocketServer.h"
-#include "SignalHandlerNotifier.h"
-#include "ClientParameters.h"
-#include "SocketClient.h"
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+#include "SocketFileReceiver.h"
+#include "../spolks_lib/SignalHandlerNotifier.h"
+#include "SocketFileSender.h"
 
 void ServerDemo();
-void ClientDemo();
-
+void ClientDemo(char*);
+void UsagePrompt();
 
 int main(int argc, char** argv)
 {
     SignalHandlerNotifier::SetupSignalHandlers();
 
-    if (argc == 2) {
-        if (strcmp(argv[1], "-server") == 0) {
-            ServerDemo();
-        } else {
-            ClientDemo();
-        }
+    switch (argc) {
+        case 2:
+            if (!strcmp(argv[1], "-server")) {
+                ServerDemo();
+            } else {
+                UsagePrompt();
+            }
+        break;
+        case 3:
+            if (!strcmp(argv[1], "-client")) {
+                ClientDemo(argv[2]);
+            } else {
+                UsagePrompt();
+            }
+        break;
+        default:
+            UsagePrompt();
+        break;
     }
+
     return EXIT_SUCCESS;    
 }
 
 void ServerDemo()
 {
-    SocketServer server("127.0.0.1", "1441", "tcp", stdout);
+    ClientParameters params;
+    params.ipAddress = "127.0.0.1";
+    params.port = "1441";
+    params.protocol = "tcp";
+
+    SocketFileReceiver server;
+    server.Start(&params);
 }
 
-void ClientDemo()
+void ClientDemo(char* path)
 {
     ClientParameters clientConfig;
     clientConfig.ipAddress = "127.0.0.1";
     clientConfig.port = "1442";
     clientConfig.protocol = "tcp";
 
-    SocketClient client(&clientConfig);
+    SocketFileSender client(&clientConfig);
 
     ClientParameters serverConfig;
     serverConfig.ipAddress = "127.0.0.1";
     serverConfig.port = "1441";
     serverConfig.protocol = "tcp";
 
-    const char* data = "some data to send";
-    int dataSize = strlen(data);
+    if (client.SendFile(&serverConfig, path) == 1) {
+        puts("File sent");
+    }
+}
 
-    client.SendTo(&serverConfig, data, dataSize);
-
+void UsagePrompt()
+{
+    puts("lab3 -server \n lab3 -client [path-to-file]");
 }

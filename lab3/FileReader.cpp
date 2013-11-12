@@ -1,6 +1,5 @@
 #include "FileReader.h"
 
-
 FileReader::FileReader(const char* filePath)
 {
     file = new std::ifstream(filePath, std::ifstream::binary);
@@ -17,7 +16,6 @@ FileReader::~FileReader()
     }
 }
 
-
 bool FileReader::CanRead()
 {
     return file != NULL && file->good();
@@ -30,9 +28,9 @@ const char* FileReader::GetData(char* buffer, int& count)
 
     file->read(buffer, count);
 
-    if (!file) {
+    if (file->eof()) {
         // Modify :count because only gcount() bytes have been read.
-        count = file->gcount();    
+        count = file->gcount();
     }
 
     position = file->tellg();
