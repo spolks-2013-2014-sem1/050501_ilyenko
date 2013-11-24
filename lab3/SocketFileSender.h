@@ -10,21 +10,21 @@ class SocketFileSender: public SocketClient
 {
 private:
 
-	std::string GetFileName(const char* fullPath);
+    std::string GetFileName(const char* fullPath);
 
-	int SendString(std::string& str, int bufferSize);
+    int SendString(std::string& str, int bufferSize);
 
 protected:
 
-	int SendFileData(const char* filePath);
+    int SendFileData(const char* filePath);
 
-	int SendFileSize(int fileSize);
+    int SendFileSize(int fileSize);
 
-	int SendFileName(std::string& fileName);
+    int SendFileName(std::string& fileName);
 
 public:
 
-	SocketFileSender(ClientParameters* params);
+    SocketFileSender(ClientParameters* params);
     
     virtual ~SocketFileSender();
 
