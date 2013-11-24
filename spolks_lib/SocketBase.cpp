@@ -101,5 +101,6 @@ void SocketBase::CloseAllSockets()
 void SocketBase::SignalCallback(int signum)
 {
     CloseAllSockets();
-    printf("Socket was halted after receiving the signal %0d.\n", signum);
+    printf("\nSocket was halted after receiving the signal %0d.\n", signum);
+    exit(signum);
 }

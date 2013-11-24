@@ -10,6 +10,8 @@ private:
     static std::vector<ISignalObserver*> observers;
 
     static void Notify(int signum);
+
+    static void Signal(int signum);
 public:
 
     static void Subscribe(ISignalObserver* obj);
