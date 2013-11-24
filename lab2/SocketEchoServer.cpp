@@ -6,8 +6,8 @@ SocketEchoServer::~SocketEchoServer(){}
 
 void SocketEchoServer::Start(ClientParameters* params, FILE* outputDescriptor)
 {
-	this->outputDescriptor = outputDescriptor;
-	SocketServer::Start(params);
+    this->outputDescriptor = outputDescriptor;
+    SocketServer::Start(params);
 }
 
 int SocketEchoServer::ClientOperation(int socket)

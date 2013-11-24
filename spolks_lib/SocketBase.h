@@ -14,18 +14,18 @@ class SocketBase: public ISignalObserver
 private:
 protected:
 
-	int socketDescriptor;
+    int socketDescriptor;
 
-	std::vector<int> openedSockets;
+    std::vector<int> openedSockets;
 
 
-	int CreateSocket(const char* addressString,  
-		const char* portString, const char* protocolName);
+    int CreateSocket(const char* addressString,  
+        const char* portString, const char* protocolName);
 
-	sockaddr_in CreateSocketAddress(const char* portString,
-		const char* address = 0);
+    sockaddr_in CreateSocketAddress(const char* portString,
+        const char* address = 0);
 
-	int ShutdownSocket(int socket);
+    int ShutdownSocket(int socket);
     
     int BindSocket(int socketDescriptor, sockaddr* socketAddress);
     
@@ -39,11 +39,11 @@ protected:
 
 public:
 
-	SocketBase();
+    SocketBase();
 
-	~SocketBase();
+    ~SocketBase();
 
-	void SignalCallback(int signum);
+    void SignalCallback(int signum);
 
 };
 
