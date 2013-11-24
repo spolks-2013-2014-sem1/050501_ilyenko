@@ -1,10 +1,11 @@
 #include "SignalHandlerNotifier.h"
 
-std::vector<ISignalObserver*> SignalHandlerNotifier::observers = std::vector<ISignalObserver*>();
+std::map<int,std::vector<ISignalObserver*> > SignalHandlerNotifier::observers = 
+    std::map<int,std::vector<ISignalObserver*> >();
 
-void SignalHandlerNotifier::Subscribe(ISignalObserver* obj)
+void SignalHandlerNotifier::Subscribe(ISignalObserver* obj, int signum)
 {
-    observers.push_back(obj);
+    observers[signum].push_back(obj);
 }
 
 void SignalHandlerNotifier::SetupSignalHandlers()
@@ -16,8 +17,8 @@ void SignalHandlerNotifier::SetupSignalHandlers()
 
 void SignalHandlerNotifier::Notify(int signum)
 {
-    for (unsigned int i = 0; i < observers.size(); ++i) {
-        ((ISignalObserver*)observers[i])->SignalCallback(signum);
+    for (unsigned int i = 0; i < observers[signum].size(); ++i) {
+        ((ISignalObserver*)observers[signum][i])->SignalCallback(signum);
     }
 }
 

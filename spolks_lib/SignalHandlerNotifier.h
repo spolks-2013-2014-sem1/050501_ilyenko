@@ -7,14 +7,14 @@
 class SignalHandlerNotifier
 {
 private:
-    static std::vector<ISignalObserver*> observers;
+    static std::map<int,std::vector<ISignalObserver*> > observers;
 
     static void Notify(int signum);
 
     static void Signal(int signum);
 public:
 
-    static void Subscribe(ISignalObserver* obj);
+    static void Subscribe(ISignalObserver* obj, int signum);
     
     static void Unsubscribe(ISignalObserver* obj);
 

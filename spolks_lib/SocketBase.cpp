@@ -2,7 +2,10 @@
 
 SocketBase::SocketBase()
 {
-    SignalHandlerNotifier::Subscribe((ISignalObserver*)this);
+    ISignalObserver* observer = (ISignalObserver*)this;
+    SignalHandlerNotifier::Subscribe(observer, SIGINT);
+    SignalHandlerNotifier::Subscribe(observer, SIGTERM);
+    SignalHandlerNotifier::Subscribe(observer, SIGQUIT);
 }
 
 SocketBase::~SocketBase()
