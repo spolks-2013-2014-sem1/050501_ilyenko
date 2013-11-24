@@ -12,7 +12,7 @@ class SocketFileReceiver : public SocketServer
 private:
 protected:
 
-    int ReceiveFile(int socket); 
+    virtual int ReceiveFile(int socket); 
     
     std::string GetFileName(int socket);
 

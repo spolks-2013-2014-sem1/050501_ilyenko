@@ -16,7 +16,7 @@ private:
 
 protected:
 
-    int SendFileData(const char* filePath);
+    virtual int SendFileData(const char* filePath);
 
     int SendFileSize(int fileSize);
 

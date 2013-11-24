@@ -43,7 +43,7 @@ public:
 
     ~SocketBase();
 
-    void SignalCallback(int signum);
+    virtual void SignalCallback(int signum);
 
 };
 
