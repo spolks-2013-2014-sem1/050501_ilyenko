@@ -1,5 +1,5 @@
-#ifndef __FileSenderWithUrgetnData__
-#define __FileSenderWithUrgetnData__
+#ifndef __FileSenderWithUrgentData__
+#define __FileSenderWithUrgentData__
 
 #include "../lab3/SocketFileSender.h"
 

@@ -6,7 +6,7 @@ OBJS = ../spolks_lib/ISignalObserver.h ../spolks_lib/headers.h \
 	 ../lab3/SocketFileReceiver.cpp \
 	../lab3/SocketFileSender.cpp ../spolks_lib/StringToIntConverter.h ./main.cpp \
 	../lab4/FileSenderWithUrgentData.cpp ../lab4/FileReceiverWithUrgentData.cpp \
-	./MultiplexedServer.cpp
+	./MultiplexedServer.cpp ./ConnectionInfo.h ./MultiplexedUdpServer.cpp
 
 CC = g++
 DEBUG = -g
@@ -15,6 +15,9 @@ LFLAGS = -Wall $(DEBUG)
 
 lab6 : $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o ./lab6
+	rm ./test/*
+	cp lab6 test/
+	mv ./test/lab6 ./test/server
 
 clean:
 	\rm -f *.o *~ lab6

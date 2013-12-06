@@ -2,13 +2,7 @@
 #define __MultiplexedServer__
 
 #include "../lab4/FileReceiverWithUrgentData.h"
-
-class ConnectionInfo {
-public:
-    FileWriter* writer;
-    int fileSize;
-    int bytesReceived;
-};
+#include "ConnectionInfo.h"
 
 
 class MultiplexedServer: public FileReceiverWithUrgentData

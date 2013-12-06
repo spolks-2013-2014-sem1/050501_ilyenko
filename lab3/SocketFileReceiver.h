@@ -1,4 +1,4 @@
-#ifndef __SocketFilereceiver__
+#ifndef __SocketFileReceiver__
 #define __SocketFileReceiver__
 
 #include "../spolks_lib/SocketServer.h"

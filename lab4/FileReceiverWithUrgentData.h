@@ -1,3 +1,6 @@
+#ifndef __FileReceiverWithUrgentData__
+#define __FileReceiverWithUrgentData__ 
+
 #include "../lab3/SocketFileReceiver.h"
 #include <fcntl.h>
 
@@ -30,3 +33,5 @@ public:
     void SignalCallback(int signum);
 
 };
+
+#endif //
