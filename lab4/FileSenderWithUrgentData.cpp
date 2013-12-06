@@ -26,7 +26,6 @@ int
 FileSenderWithUrgentData::
 SendFileData(const char* filePath)
 {
-    //puts("FileSenderWithUrgentData::");
 
     FileReader* reader = new FileReader(filePath);
     int fileSize = reader->GetFileSize();
@@ -36,9 +35,9 @@ SendFileData(const char* filePath)
     int bufferSize = 1024;
     char* buffer = new char[bufferSize];
 
-    //int bufferNumSent = 0;
+    int bufferNumSent = 0;
+    int oobStep = (fileSize / bufferSize) / 5;
 
-    SendUrgentData();
     while (reader->CanRead()) {
                 
         reader->GetData(buffer, bufferSize);
@@ -48,11 +47,12 @@ SendFileData(const char* filePath)
         bufferSize = 1024;
         memset(buffer, 0, bufferSize);
 
-        //++bufferNumSent;
+        ++bufferNumSent;
+        if (oobStep && bufferNumSent % oobStep == 0) {
+            SendUrgentData();    
+        }
         
-        SendUrgentData();  
     }
-    SendUrgentData();
 
     puts("Data sending ended");
     delete [] buffer;

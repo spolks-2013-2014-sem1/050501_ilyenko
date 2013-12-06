@@ -14,3 +14,8 @@
 #include <cstring>
 #include <vector>
 #include <map>
+#include <iostream>
+
+#include <arpa/inet.h>
+#include <error.h>
+#include <fcntl.h>

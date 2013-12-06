@@ -13,9 +13,9 @@ protected:
     int CreateServer(const char* addressString, 
         const char* portString, const char* protocolName);
 
-    int StartServerCycle(int serverSocket, bool isTcp);
+    virtual int StartServerCycle(int serverSocket, bool isTcp);
     
-    int AcceptClient(int serverSocket);
+    virtual int AcceptClient(int serverSocket);
     
     int StartListening(int socketDescriptor, int backlog);
 
