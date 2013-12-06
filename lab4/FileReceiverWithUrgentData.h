@@ -1,5 +1,5 @@
 #include "../lab3/SocketFileReceiver.h"
-
+#include <fcntl.h>
 
 class FileReceiverWithUrgentData: public SocketFileReceiver
 {
@@ -16,6 +16,9 @@ protected:
     int CheckUrgentData(int socket);
 
     void UrgentOperation(int bytesRead, int bytesTotal);
+
+    // Set socket ownership to get SIGURG when OOB data will be received.
+    int SetSocketOwnership(int socket);
 
 public:
 

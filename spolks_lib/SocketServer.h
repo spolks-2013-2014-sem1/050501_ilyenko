@@ -13,7 +13,7 @@ protected:
     int CreateServer(const char* addressString, 
         const char* portString, const char* protocolName);
 
-    int StartServerCycle(int serverSocket);
+    int StartServerCycle(int serverSocket, bool isTcp);
     
     int AcceptClient(int serverSocket);
     

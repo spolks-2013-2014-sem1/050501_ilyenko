@@ -32,6 +32,10 @@ int
 FileReceiverWithUrgentData::
 ReceiveFile(int socket)
 {
+    //puts("FilereceiverWithUrgentData::");
+
+    SetSocketOwnership(socket);
+
     const int bufferSize = 1024;
 
     std::string fileName = GetFileName(socket);
@@ -42,6 +46,7 @@ ReceiveFile(int socket)
     char buffer[bufferSize] = {0};
     int totalBytesRead = 0;
 
+    
     do {
 
         if (CheckUrgentData(socket) == 1) {
@@ -62,12 +67,13 @@ ReceiveFile(int socket)
                 totalBytesRead += bytesRead;                
             }
         } else {
-            if (totalBytesRead != fileSize) {
+            // Data receiveing was interrupted by a signal call
+            if (errno != EINTR &&
+                totalBytesRead != fileSize) {
                 puts("Error when receiving file data.");    
+                break;
             }
-            break;
         }
-
     } while (totalBytesRead < fileSize);
 
     return 0;
@@ -78,6 +84,10 @@ FileReceiverWithUrgentData::
 CheckUrgentData(int socket)
 {
     if (this->urgentFlag) {
+        this->urgentFlag = false;
+
+        //puts("urgent flag was read");
+        
         int mark = sockatmark(socket);
         if (mark == -1) {
             perror("sockatmark check failed:");
@@ -85,6 +95,7 @@ CheckUrgentData(int socket)
             if (recv(socket, &this->urgentData, 1, MSG_OOB) <= 0) {
                 perror("OOB data receiving failed:");
             }
+            //puts("OOB data was read");
         }
         return mark;
     }
@@ -96,6 +107,20 @@ void
 FileReceiverWithUrgentData::
 UrgentOperation(int bytesRead, int bytesTotal)
 {
-    int percent = bytesRead/bytesTotal;
+    int percent = (double)bytesRead/bytesTotal * 100;
     printf("\n[%d%%] Received %d/%d\n", percent, bytesRead, bytesTotal);
+    fflush(stdout);
+}
+
+int
+FileReceiverWithUrgentData::
+SetSocketOwnership(int socket)
+{
+    int result = fcntl(socket, F_SETOWN, getpid());
+    if (result < 0) {
+       perror("Cannot establish ownership of a socket:");
+       return -1;
+    }
+
+    return 0;
 }

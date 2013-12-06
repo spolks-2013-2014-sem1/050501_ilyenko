@@ -13,6 +13,7 @@ void SignalHandlerNotifier::SetupSignalHandlers()
     Signal(SIGINT);
     Signal(SIGTERM);
     Signal(SIGQUIT);
+    Signal(SIGURG);
 }
 
 void SignalHandlerNotifier::Notify(int signum)
@@ -26,7 +27,6 @@ void SignalHandlerNotifier::Signal(int signum)
 {
     struct sigaction new_action; 
     new_action.sa_handler = Notify;
-    sigemptyset (&new_action.sa_mask);
-    new_action.sa_flags = 0;
+    
     sigaction(signum, &new_action, 0);
 }

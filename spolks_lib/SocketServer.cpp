@@ -26,33 +26,44 @@ int SocketServer::CreateServer(const char* addressString, const char* portString
     
     printf("Server started at %s:%s \n", addressString, portString);
 
-    const int listenQueueLength = 10;
-    StartListening(serverSocketDescriptor, listenQueueLength);
-    StartServerCycle(serverSocketDescriptor);
+    bool isTcp = (strcmp(protocolName, "tcp") == 0);
+    // Enable listening only for TCP sockets
+    if (isTcp) {
+        const int listenQueueLength = 10;
+        StartListening(serverSocketDescriptor, listenQueueLength);    
+    }
+    
+    StartServerCycle(serverSocketDescriptor, isTcp);
 
     Close(serverSocketDescriptor);
     return 0;
 }
 
-int SocketServer::StartServerCycle(int serverSocket)
+int SocketServer::StartServerCycle(int serverSocket, bool isTcp)
 {
     while("true") {
-        int clientSocket = AcceptClient(serverSocket);
-        if (clientSocket == -1) {
-            continue;
+        
+        int clientSocket = serverSocket;
+        if (isTcp) {
+            clientSocket = AcceptClient(serverSocket);
+            if (clientSocket == -1) {
+                continue;
+            }    
+            puts("Client connected.");
         }
-        puts("Client connected.");
         
         ClientOperation(clientSocket);
         
-        int shutdownResult = ShutdownSocket(clientSocket);
-        if (shutdownResult == -1) {
-            Close(serverSocket);
-            Close(clientSocket);
-            exit(EXIT_FAILURE);
+        if (isTcp) {
+            int shutdownResult = ShutdownSocket(clientSocket);
+            if (shutdownResult == -1) {
+                Close(serverSocket);
+                Close(clientSocket);
+                exit(EXIT_FAILURE);
+            }                
+            Close(clientSocket);    
         }
         
-        Close(clientSocket);
         puts("Client connection has been closed.");
     }
     return 0;
